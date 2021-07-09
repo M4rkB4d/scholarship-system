@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -75,6 +75,6 @@ const productSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-})
+});
 
 module.exports = mongoose.model('Product', productSchema);

@@ -7,8 +7,8 @@ const connectDatabase = () => {
         useUnifiedTopology: true,
         useCreateIndex: true
     }).then(con => {
-        console.log(`MongoDB Database connected with HOST: ${con.connection.host}`)
-    })
-}
+        console.log(`MongoDB Database connected with HOST: ${con.connection.host}`);
+    });
+};
 
-module.exports = connectDatabase
+module.exports = connectDatabase;
