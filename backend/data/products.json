@@ -1,0 +1,53 @@
+[
+    {
+        "name": "Test_1",
+        "description": "aaaa",
+        "price": "290.00",
+        "ratings": 4.6,
+        "images": [
+            {
+                "public_id": "test",
+                "url": "https://homepages.cae.wisc.edu/~ece533/images/airplane.png"
+            }
+        ],
+        "category": "Electronics",
+        "seller": "Ebay",
+        "stock": 50,
+        "numOfReviews": 32,
+        "reviews": []
+    }, 
+    {
+        "name": "Test_2",
+        "description": "bbbbb",
+        "price": "290.00",
+        "ratings": 4.6,
+        "images": [
+            {
+                "public_id": "test",
+                "url": "https://homepages.cae.wisc.edu/~ece533/images/airplane.png"
+            }
+        ],
+        "category": "Electronics",
+        "seller": "Ebay",
+        "stock": 50,
+        "numOfReviews": 32,
+        "reviews": []
+    }, 
+    {
+        "name": "Test_3",
+        "description": "ccccc",
+        "price": "290.00",
+        "ratings": 4.6,
+        "images": [
+            {
+                "public_id": "test",
+                "url": "https://homepages.cae.wisc.edu/~ece533/images/airplane.png"
+            }
+        ],
+        "category": "Electronics",
+        "seller": "Ebay",
+        "stock": 50,
+        "numOfReviews": 32,
+        "reviews": []
+    }
+]
