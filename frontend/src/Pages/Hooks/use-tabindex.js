@@ -13,7 +13,7 @@ const useTabIndex = () => {
         setTabIndex(newValue)
     }
 
-    return { useTabIndex, valueChangeHandler }
+    return { useTabIndex, valueChangeHandler, setTabIndex }
 }
 
 export default useTabIndex;

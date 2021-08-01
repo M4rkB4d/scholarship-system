@@ -22,10 +22,13 @@ import About from '../Pages/About';
 import Announcement from '../Pages/Announcement';
 import Contact from '../Pages/Contact';
 import Login from '../Pages/Login';
-import Register from '../Pages/Register';
+import StudentRegistration from '../Pages/StudentRegistration';
 // Custom Components
 import TabBarInitial from './TabBarInitial';
 import LoginButton from './LoginButton';
+import useLoginSession from '../Pages/Hooks/use-loginSession';
+import LogoutButton from './LogoutButton';
+import StudentProfile from '../Pages/StudentProfile';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -88,45 +91,42 @@ const useStyles = makeStyles((theme) => ({
 
 const NavBar = () => {
     const classes = useStyles();
+    const { useUserSignedIn, useUserType } = useLoginSession();
+    // console.log(useUserType)
+    // useLoginSession()
+    // console.log(useUserSignedIn, useUserType)
+
+    const isLoggedIn = (isLoggedIn) => {
+      return isLoggedIn ? <LogoutButton />: <LoginButton/>;
+    }
 
     return (
         <Router>
             <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
-                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                    <SchoolIcon />
-                </IconButton>
-                <Typography variant="h6" className={classes.title}>
-                    Dashboard
-                </Typography>
-                <Grid container justifyContent="center">
-                    <TabBarInitial/>
-                </Grid>
-                <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                    <SearchIcon />
-                    </div>
-                    <InputBase
-                    placeholder="Search…"
-                    classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                    />
-                </div>
-                <LoginButton tabIndex="none"/>
-                </Toolbar>
-            </AppBar>
+              <AppBar position="static">
+                  <Toolbar>
+                  <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                      <SchoolIcon />
+                  </IconButton>
+                  <Typography variant="h6" className={classes.title}>
+                      Dashboard
+                  </Typography>
+                  <Grid container justifyContent="center">
+                      <TabBarInitial useUserType={useUserType}/>
+                  </Grid>
+                  { isLoggedIn(useUserSignedIn) }
+                  {/* <LoginButton/>
+                  <LogoutButton/> */}
+                  </Toolbar>
+              </AppBar>
             </div>
             <div>
               <Switch>
                 <Route exact path="/">
-                    <Announcement/>
+                    {/* <Announcement/> */}
                 </Route>
                 <Route path="/announcement">
-                    <Announcement/>
+                    {/* <Announcement/> */}
                 </Route>
                 <Route path="/about">
                     <About/>
@@ -138,7 +138,10 @@ const NavBar = () => {
                     <Login/>
                 </Route>
                 <Route path="/register">
-                    <Register/>
+                    <StudentRegistration/>
+                </Route>
+                <Route path="/profile">
+                    <StudentProfile/>
                 </Route>
               </Switch>
             </div>

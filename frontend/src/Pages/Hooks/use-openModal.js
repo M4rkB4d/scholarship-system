@@ -7,13 +7,18 @@ const useOpenModal = () => {
 
         setOpenModal(true);
     }
-
     const closeChangeHandler = () => {
 
         setOpenModal(false);
     }
+    const openModal = () => {
+        setOpenModal(true);
+    }
+    const closeModal = () => {
+        setOpenModal(false);
+    }
 
-    return { useOpenModal, openChangeHandler, closeChangeHandler }
+    return { useOpenModal, openChangeHandler, closeChangeHandler, openModal, closeModal };
 }
 
-export default useOpenModal;
+export default (useOpenModal);

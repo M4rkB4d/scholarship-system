@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 // Material UI Raect
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import { Link } from "react-router-dom";
 // Hook
 import useTabIndex from '../Pages/Hooks/use-tabindex';
+// import useLoginSession from '../Pages/Hooks/use-loginSession';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,9 +33,49 @@ const TabBarInitial = (props) => {
      * forgetting to do so causes undefined value fetching 
      * eg. `keyname` -> useTabIndex : `alias` -> tabIndex
      */
-    const { useTabIndex: tabIndex, valueChangeHandler: onChangeHandler} = useTabIndex();
+    // const { useUserSignedIn, useUserType } = useLoginSession()
+    const { useTabIndex: tabIndex, valueChangeHandler: onChangeHandler, setTabIndex} = useTabIndex();
+    const { to, useUserType } = props;
 
-    console.log(tabIndex)
+    const CustomLink = React.useMemo(
+      () =>
+        React.forwardRef((linkProps, ref) => (
+          <Link ref={ref} to={to} {...linkProps} />
+        )),
+      [to],
+    );
+
+    const tabBasedOnUser = (userType) => {
+      
+      switch (userType) {
+        case "scholarship officer":
+          return [
+            <Tab key={0} component={CustomLink} to="/student" label="Student" />,
+            <Tab key={1} component={CustomLink} to="/scholarship" label="Scholarship" />,
+            <Tab key={2} component={CustomLink} to="/search" label="Search" />,
+            <Tab key={3} component={CustomLink} to="/feedback" label="Feedback" />,
+          ]
+        case "student":
+          return [
+              <Tab key={0} component={CustomLink} to="/profile" label="Profile" />,
+              <Tab key={1} component={CustomLink} to="/scholarship" label="Scholarship" />,
+              <Tab key={2} component={CustomLink} to="/feedback" label="Feedback" />,
+          ] 
+        case "admin":
+          return [
+              <Tab key={0} component={CustomLink} to="/college-details" label="College Details" />,
+              <Tab key={1} component={CustomLink} to="/college-officers" label="College Officers" />,
+              <Tab key={2} component={CustomLink} to="/block-college-officer" label="Block College Officer" />,
+          ]
+        case "visitor":
+          return [
+              <Tab key={0} component={CustomLink} to="/announcement" label="Announcement" />,
+              <Tab key={1} component={CustomLink} to="/about" label="About" />,
+              <Tab key={2} component={CustomLink} to="/contact" label="Contact" />,
+              <Tab key={3} component={CustomLink} to="/register" label="Register" />,
+          ] 
+      }
+    }
 
     return (
         <div className={classes.root}>
@@ -49,10 +90,7 @@ const TabBarInitial = (props) => {
                 className={classes.tabs}
                 centered
                 >
-                    <Tab component={Link} to="/announcement" label="Announcement" />
-                    <Tab component={Link} to="/about" label="About" />
-                    <Tab component={Link} to="/contact" label="Contact" />
-                    <Tab component={Link} to="/register" label="Register" />
+                  { tabBasedOnUser(useUserType) }
                 </Tabs>
             </Paper>  
         </div>
