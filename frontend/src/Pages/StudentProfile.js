@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
@@ -97,6 +97,9 @@ const StudentProfile = () => {
     // getStudenttUsers();
     // }, [])
 
+    // Student Profile State
+    const [useStudentProfile, setStudentProfile] = useState([])
+
     // Input States
     const [useFirstNameInput, setUseFirstNameInput] = useState("")
     const [useLastNameInput, setUseLastNameInput] = useState("")
@@ -113,7 +116,8 @@ const StudentProfile = () => {
     const [useContactNumberInput, setUseContactNumberInput] = useState("")
     const [useOpenUploadInput, setUseOpenUploadInput] = useState(false);
     const [useFileUploadInput, setUseFileUploadInput] = useState([]);
-    
+    const [useDownloadURL, setUseDownloadURL] = useState("")
+
     // Input Helper And Error Text States
     const [useValidFirstName, setUseValidFirstName] = useState({helperText: 'Enter valid first name',
                                                                 error: false})
@@ -324,29 +328,51 @@ const StudentProfile = () => {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
                 console.log('File available at', downloadURL);
+                setUseDownloadURL(downloadURL);
+                createStudentProfile(downloadURL)
             });
             }
         );
     }
 
-    console.log(useUserUid)
+    function readStudentProfile() {
+        // setLoading(true);
+        db.collection("profile")
+          .where('user_uid', '==', useUserUid)
+          //.where('title', '==', 'School1') // does not need index
+          //.where('score', '<=', 10)    // needs index
+          //.orderBy('owner', 'asc')
+          //.limit(3)
+          .onSnapshot((querySnapshot) => {
+            const items = [];
+            querySnapshot.forEach((doc) => {
+              items.push(doc.data());
+            });
+            setStudentProfile(items);
+          });
+      }
+    
+    
+    // Use Effect
+    useEffect(() => {
+        // readStudentProfile();
+        // console.log('use effect')
+        // console.log("uid of currently login user => ", useUserUid)
+        // console.log(useStudentProfile)
+        readStudentProfile()
+        return () => {
+            readStudentProfile()
+            setStudentProfile([])
+        }
+    }, [useUserUid])
 
-    // Read Student Existing Profile
-    // const readStudentProfile = (id) => {
-    //     db
-    //     .collection("profile").doc(id)
-    //     .onSnapshot((doc) => {
-    //         console.log("Current data: ", doc.data());
-    //     });
-    // }
-    // // Use Effect
-    // useEffect(() => {
-    //     readStudentProfile(useUserUid);
-    // }, [])
+    // readStudentProfile();
     
     // Create Student Profile
-    const createStudentProfile = () => {
+    const createStudentProfile = (url) => {
         var formattedContactNumber = useContactNumberInput.replaceAll(/[^\w\s]/gi, '').replaceAll(/\s/g,'')
+        var date = new Date();
+        var currentDateTime = date.toLocaleString();
         ref.doc(useUserUid)
         .set({
             user_uid: useUserUid,
@@ -364,7 +390,10 @@ const StudentProfile = () => {
             user_course: useCourseInput,
             user_school_year: useSchoolYearInput,
             user_contact_number: formattedContactNumber,
-            user_gwa_average: 'images/' + useUserUid 
+            user_gwa_average: url,
+            user_scholarship_status: "Pending",
+            user_scholarship_number: 0, 
+            user_last_modified: currentDateTime,           
 
         })
         .then(() => {
@@ -422,22 +451,28 @@ const StudentProfile = () => {
         console.log("notEmptyInputChecker", notEmptyInputChecker(notEmptyInputs))
         console.log("validInputChecker(validInputs) ", validInputChecker(validInputs) )
 
-        if (notEmptyInputChecker(notEmptyInputs) === false) {
+        if(useFileUploadInput.length !== 0) {
+            if (notEmptyInputChecker(notEmptyInputs) === false) {
+                handleCloseLoadingIndicator();
+                handleClickSnackbar();
+                handleSnackbarSeverity("warning");
+                handleSnackbarMessage("Fill All Required Fields"); 
+            } else {
+                if (validInputChecker(validInputs) === true) {
+                    // Create Data If Validations Passed
+                    uploadGeneralWeightedAverage()
+                } else {
+                    handleCloseLoadingIndicator();
+                    handleClickSnackbar();
+                    handleSnackbarSeverity("error");
+                    handleSnackbarMessage("Invalid Inputs. Follow Validation Requirements"); 
+                }
+            }
+        } else {
             handleCloseLoadingIndicator();
             handleClickSnackbar();
             handleSnackbarSeverity("warning");
-            handleSnackbarMessage("Fill All Required Fields"); 
-        } else {
-            if (validInputChecker(validInputs) === true) {
-                // Create Data If Validations Passed
-                createStudentProfile()
-                uploadGeneralWeightedAverage()
-            } else {
-                handleCloseLoadingIndicator();
-                handleClickSnackbar();
-                handleSnackbarSeverity("error");
-                handleSnackbarMessage("Invalid Inputs. Follow Validation Requirements"); 
-            }
+            handleSnackbarMessage("Upload General Weighted Average Photo");
         }
     } 
 
@@ -538,11 +573,6 @@ const StudentProfile = () => {
     const uploadHandleOpen = () => {
         setUseOpenUploadInput(true)
     }
-    const clearButtonClickHandler = (e) => {
-        e.preventDefault();
-        console.log('Edit Button Clicked!')
-        console.log(useFileUploadInput[0])
-    } 
     const submitButtonClickHandler = (e) => {
         e.preventDefault();
         console.log('Submit Button Clicked!')
@@ -560,6 +590,28 @@ const StudentProfile = () => {
           </IconButton>
         </>
     );
+
+
+    useEffect(() => {
+        if (useStudentProfile[0]) {
+            setUseFirstNameInput(useStudentProfile[0].user_first_name)
+            setUseLastNameInput(useStudentProfile[0].user_last_name)
+            setUseMiddleNameInput(useStudentProfile[0].user_middle_name)
+            setUseGenderInput(useStudentProfile[0].user_gender)
+            setUseAddressInput(useStudentProfile[0].user_address)
+            setUseDistrictInput(useStudentProfile[0].user_district)
+            setUseZipcodeInput(useStudentProfile[0].user_zipcode)
+            setUseCitizenshipInput(useStudentProfile[0].user_citizenship)
+            setUseSchoolInput(useStudentProfile[0].user_school)
+            setUseSchoolAddressInput(useStudentProfile[0].user_school_address)
+            setUseCourseInput(useStudentProfile[0].user_course)
+            setUseSchoolYearInput(useStudentProfile[0].user_school_year)
+            setUseContactNumberInput(useStudentProfile[0].user_contact_number.substring(2))
+        }
+        
+    }, [useStudentProfile])
+
+        
 
     // Return Custom Component
     return (

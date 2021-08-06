@@ -46,26 +46,6 @@ const StudentRegistration = () => {
 
   // Firebase 
   const ref = db.collection('users')
-  function getStudenttUsers() {
-    // setLoading(true);
-    ref.onSnapshot((querySnapshot) => {
-      const students = [];
-      querySnapshot.forEach((snapshot) => {
-        students.push(snapshot.data());
-      })
-      setStudentUsers(students)
-    })
-  }
-
-  // Use Effect
-  useEffect(() => {
-    getStudenttUsers();
-  }, [])
-
-  // Firebase States
-  const [useStudentUsers, setStudentUsers] = useState([])
-  // Firebase Log States
-  // console.log(useStudentUsers)
 
   // Input States
   const [useFirstNameInput, setUseFirstNameInput] = useState("")
@@ -309,7 +289,6 @@ const StudentRegistration = () => {
   const clearButtonClickHandler = (e) => {
     e.preventDefault();
     console.log('Clear Button Clicked!')
-    console.log(useStudentUsers)
   } 
   const registerButtonClickHandler = (e) => {
     e.preventDefault();
@@ -328,7 +307,7 @@ const StudentRegistration = () => {
         message={useSnackbarMessage}
       />
       <Paper className={classes.paper}> 
-          <form className={classes.form} noValidate autoComplete="off" action="">
+          <form noValidate autoComplete="off" action="">
               <FormGroup className={classes.formGroup} noValidate autoComplete="on" row>
                   <Box m={5}>
                     <Grid container spacing={4}>

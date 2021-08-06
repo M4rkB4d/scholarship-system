@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // Material UI Raect Component
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -15,7 +15,8 @@ import Box from '@material-ui/core/Box';
 import {
     BrowserRouter as Router,
     Switch,
-    Route
+    Route,
+    useHistory
   } from "react-router-dom";
 // Pages
 import About from '../Pages/About';
@@ -29,6 +30,12 @@ import LoginButton from './LoginButton';
 import useLoginSession from '../Pages/Hooks/use-loginSession';
 import LogoutButton from './LogoutButton';
 import StudentProfile from '../Pages/StudentProfile';
+import useTabIndex from '../Pages/Hooks/use-tabindex';
+import Applicants from '../Pages/Applicants';
+import Scholarship from '../Pages/Scholarship';
+import CollegeOfficerRegistration from '../Pages/CollegeOfficerRegistration';
+import CollegeOfficerBlock from '../Pages/CollegeOfficerBlock';
+import Scholars from '../Pages/Scholars';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -92,10 +99,7 @@ const useStyles = makeStyles((theme) => ({
 const NavBar = () => {
     const classes = useStyles();
     const { useUserSignedIn, useUserType } = useLoginSession();
-    // console.log(useUserType)
-    // useLoginSession()
-    // console.log(useUserSignedIn, useUserType)
-
+    
     const isLoggedIn = (isLoggedIn) => {
       return isLoggedIn ? <LogoutButton />: <LoginButton/>;
     }
@@ -105,35 +109,33 @@ const NavBar = () => {
             <div className={classes.root}>
               <AppBar position="static">
                   <Toolbar>
-                  <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                       <SchoolIcon />
-                  </IconButton>
-                  <Typography variant="h6" className={classes.title}>
-                      Dashboard
-                  </Typography>
-                  <Grid container justifyContent="center">
-                      <TabBarInitial useUserType={useUserType}/>
-                  </Grid>
-                  { isLoggedIn(useUserSignedIn) }
-                  {/* <LoginButton/>
-                  <LogoutButton/> */}
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                      Scholarship Streamline Process System
+                    </Typography>
+                    <Grid container justifyContent="center">
+                      <TabBarInitial useUserSignedIn={useUserSignedIn} useUserType={useUserType}/>
+                    </Grid>
+                      { isLoggedIn(useUserSignedIn) }
                   </Toolbar>
               </AppBar>
             </div>
             <div>
               <Switch>
                 <Route exact path="/">
-                    {/* <Announcement/> */}
+                    <Announcement/>
                 </Route>
                 <Route path="/announcement">
-                    {/* <Announcement/> */}
+                    <Announcement/>
                 </Route>
                 <Route path="/about">
                     <About/>
                 </Route>
-                <Route path="/contact">
+                {/* <Route path="/contact">
                     <Contact/>
-                </Route>
+                </Route> */}
                 <Route path="/login">
                     <Login/>
                 </Route>
@@ -142,6 +144,23 @@ const NavBar = () => {
                 </Route>
                 <Route path="/profile">
                     <StudentProfile/>
+                </Route>
+                <Route path="/applicants">
+                    <Applicants/>
+                </Route>
+                <Route path="/scholars">
+                    <Scholars/>
+                </Route>
+                <Route path="/scholarship">
+                    <Scholarship/>
+                </Route>
+                <Route path="/college-officers">
+                    {/* <Scholarship/> */}
+                    <CollegeOfficerRegistration/>
+                </Route>
+                <Route path="/block-college-officer">
+                    {/* <Scholarship/> */}
+                    <CollegeOfficerBlock/>
                 </Route>
               </Switch>
             </div>
