@@ -16,7 +16,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    useHistory
+    useHistory,
   } from "react-router-dom";
 // Pages
 import About from '../Pages/About';

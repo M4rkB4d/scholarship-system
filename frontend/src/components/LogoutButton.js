@@ -2,8 +2,6 @@ import { Button } from '@material-ui/core'
 import React from 'react'
 import { auth } from '../firebase'
 // import useLoginSession from '../Pages/Hooks/use-loginSession'
-
-
 const LogoutButton = (props) => {
     
     // const { setUseUserType, 

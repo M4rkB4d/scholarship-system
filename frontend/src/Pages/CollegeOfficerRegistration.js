@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import { Box, Button, Divider, FormGroup, Grid, Typography } from '@material-ui/core';
-import db, { auth } from '../firebase';
+import db, { auth, secondary } from '../firebase';
 import { grey } from '@material-ui/core/colors';
 import useLoadingIndicator from './Hooks/use-loading-indicator';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -153,7 +153,7 @@ const CollegeOfficerRegistration = () => {
     // Firebase Functions
     function writeUserStudentData() {
     // add user to authentication
-    auth.createUserWithEmailAndPassword(
+    secondary.auth().createUserWithEmailAndPassword(
         useEmailInput,
         usePasswordInput
     ).then((user) => {
@@ -178,6 +178,7 @@ const CollegeOfficerRegistration = () => {
             handleClickSnackbar()
             handleSnackbarSeverity("success")
             handleSnackbarMessage("Successfuly Registered!")
+            secondary.auth().signOut()
         })
         .catch((error) => {
             handleClickSnackbar();

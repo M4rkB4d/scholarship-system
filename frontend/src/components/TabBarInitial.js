@@ -79,11 +79,15 @@ const TabBarInitial = (props) => {
     // console.log(tabBasedOnUser(useUserType).length)
 
     useEffect(() => {
-      if (tabBasedOnUser(useUserType).length <= tabIndex) {
+
+      console.log(tabBasedOnUser(useUserType).length, tabIndex)
+      if ((tabBasedOnUser(useUserType).length >= tabIndex) && (useUserSignedIn == true)) {
         setTabIndex(0)
+        console.log("inside here")
         if (useUserType === "admin") {
           history.push("/college-officers")
         } else if (useUserType === "student") {
+          console.log("inside here student")
           history.push("/profile")
         } else if (useUserType === "scholarship officer") {
           history.push("/applicants")
@@ -91,13 +95,32 @@ const TabBarInitial = (props) => {
           history.push("/announcement")
         } 
       }
+
+      // if ((tabBasedOnUser(useUserType).length == tabIndex) && (useUserSignedIn === false)) {
+      //   setTabIndex(0)
+      //   console.log("inside here")
+      //   if (useUserType === "admin") {
+      //     history.push("/college-officers")
+      //   } else if (useUserType === "student") {
+      //     console.log("inside here student")
+      //     history.push("/profile")
+      //   } else if (useUserType === "scholarship officer") {
+      //     history.push("/applicants")
+          
+      //   } else if (useUserType === "visitor") {
+      //     history.push("/announcement")
+      //   } 
+      // } else {
+      //   setTabIndex(0)
+      //     history.push("/announcement")
+      // }
       
       // Conditional Statement For Logout Redirection Of Page
-      if ((tabBasedOnUser(useUserType).length <= tabIndex) && (useUserSignedIn === false)) {
-        setTabIndex(0)
-        history.push("/announcement")
-      }
-    }, [tabBasedOnUser(useUserType).length, useTabIndex, useUserType])
+      // if ((tabBasedOnUser(useUserType).length <= tabIndex) && (useUserSignedIn === false)) {
+      //   setTabIndex(0)
+      //   history.push("/announcement")
+      // }
+    }, [tabBasedOnUser(useUserType).length, useTabIndex, useUserType, history, useUserSignedIn])
 
     return (
         <div className={classes.root}>

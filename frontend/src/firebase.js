@@ -10,13 +10,14 @@ var firebaseConfig = {
     messagingSenderId: "1090485778654",
     appId: "1:1090485778654:web:a8b01fb7e557b57cbcea4f"
 };
-
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+const secondary = firebase.initializeApp(firebaseConfig, "Secondary");
 
 // define variables to be imported
 const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
-export {auth, storage};
+// const admin = firebase.admin();
+export {auth, storage, secondary};
 export default db;
